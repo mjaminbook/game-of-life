@@ -12,17 +12,17 @@ import java.text.ParseException;
 
 /**
  * Main window class for running and displaying the Life simulation.
- * 
+ *
  * @author Michael Ekstrand <ekstrand@cs.umn.edu>
- * 
- * This class provides the main interface to the Life system, including its main
- * entry point and its main window.
+ *         <p/>
+ *         This class provides the main interface to the Life system, including its main
+ *         entry point and its main window.
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame
-    implements ActionListener, ChangeListener {
-    
-    private static final int RUN_DELAY = 250;
+        implements ActionListener, ChangeListener {
+
+    private static final int RUN_DELAY = 150;
 
     private JButton bStep;
     private JToggleButton tbRun;
@@ -33,7 +33,7 @@ public class MainWindow extends JFrame
 
     /**
      * Main entry point for the Game of Life program
-     * 
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -46,17 +46,17 @@ public class MainWindow extends JFrame
      */
     public MainWindow() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+
         // use the border layout manager
         setLayout(new BorderLayout());
-        
+
         // create our drawing pane
         pane = new LifeComponent();
         add(pane, BorderLayout.CENTER);
-        
+
         // set the board
         setBoard(new GameBoard());
-        
+
         // create the toolbar
         JToolBar tb = new JToolBar();
         add(tb, BorderLayout.NORTH);
@@ -85,9 +85,9 @@ public class MainWindow extends JFrame
         tbRun = new JToggleButton("Run");
         tbRun.addChangeListener(this);
         tb.add(tbRun);
-        
+
         tb.add(new JToolBar.Separator());
-        
+
         tb.add(new JLabel("Rule set:"));
         ruleSetButtons = new ButtonGroup();
         JRadioButton conway = new JRadioButton("Conway");
@@ -100,22 +100,23 @@ public class MainWindow extends JFrame
         ruleSetButtons.add(highlife);
         tb.add(highlife);
         ruleSetButtons.setSelected(conway.getModel(), true);
-        
+
         tb.add(new JToolBar.Separator());
-        
+
         JButton quit = new JButton("Quit");
         quit.setActionCommand("quit");
         quit.addActionListener(this);
         tb.add(quit);
 
         pack();
-        
+
         // Set up the timer
         runTimer = new Timer(RUN_DELAY, new TimerTranslator(this, "step"));
     }
-    
+
     /**
      * Set a game board to display and manipulate
+     *
      * @param b The new game board to display.
      */
     private void setBoard(GameBoard b) {
@@ -159,7 +160,7 @@ public class MainWindow extends JFrame
             runTimer.stop();
         }
     }
-    
+
     /**
      * Open a file.
      */
@@ -173,14 +174,14 @@ public class MainWindow extends JFrame
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this,
                         String.format("An error occured reading %s:\n%s",
-                            f, e.getMessage()),
+                                f, e.getMessage()),
                         "Error reading file",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
     }
-    
+
     /**
      * Save a file.
      */
@@ -193,14 +194,14 @@ public class MainWindow extends JFrame
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this,
                         String.format("An error occured saving to %s:\n%s",
-                            f, e.getMessage()),
+                                f, e.getMessage()),
                         "Error saving file",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
     }
-    
+
     /**
      * Prompt the user for a size and create a new game board.
      */
@@ -208,7 +209,7 @@ public class MainWindow extends JFrame
         JSpinner width = new JSpinner(new SpinnerNumberModel(100, 10, 500, 1));
         JSpinner height = new JSpinner(new SpinnerNumberModel(100, 10, 500, 1));
         int result = JOptionPane.showOptionDialog(this,
-                new Object[] {"Enter dimentions for new board:", width, height},
+                new Object[]{"Enter dimentions for new board:", width, height},
                 "New Board", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 null, null, null);
@@ -224,7 +225,7 @@ public class MainWindow extends JFrame
             } catch (ParseException e) {
                 // no-op
             }
-            
+
             // create the board
             Integer w = (Integer) width.getValue();
             Integer h = (Integer) height.getValue();
@@ -235,27 +236,27 @@ public class MainWindow extends JFrame
 
     /**
      * Translate Timer ActionEvents into action events for another listener.
-     * @author Michael Ekstrand <ekstrand@cs.umn.edu>
      *
-     * In Java 6, the Timer supports action commands.  This is not, however, the
-     * case in Java 5.  Therefore, we need this adaptor class to translate timer
-     * events into events with commands.
+     * @author Michael Ekstrand <ekstrand@cs.umn.edu>
+     *         <p/>
+     *         In Java 6, the Timer supports action commands.  This is not, however, the
+     *         case in Java 5.  Therefore, we need this adaptor class to translate timer
+     *         events into events with commands.
      */
     private class TimerTranslator implements ActionListener {
         private ActionListener delegate;
         private String command;
-        
+
         public TimerTranslator(ActionListener l, String cmd) {
             delegate = l;
             command = cmd;
         }
-        
+
         public void actionPerformed(ActionEvent e) {
             ActionEvent e2 = new ActionEvent(e.getSource(), e.getID(), command);
             delegate.actionPerformed(e2);
         }
     }
-    
 
 
     /**
